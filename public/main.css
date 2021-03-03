@@ -1,0 +1,17 @@
+.navbarstyle {
+  color: slateblue;
+  background-color: aquamarine;
+}
+.error {
+  color: black;
+  background-color: red;
+}
+.lorem {
+  color: chartreuse;
+  background-color: mistyrose;
+}
+.info {
+  border-radius: 25px;
+  color: aqua;
+  background-color: hotpink;
+}

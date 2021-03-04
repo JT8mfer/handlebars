@@ -8,8 +8,8 @@ app.engine(
   hbs({
     defaultLayout: "layout",
     extname: ".hbs",
-    // layoutsDir: path.join(__dirname, "views", "layouts"),
-    // partialsDir: path.join(__dirname, "views", "partials"),
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
   })
 );
 app.set("views", path.join(__dirname, "views"));

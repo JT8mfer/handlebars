@@ -1,8 +1,13 @@
 const express = require("express");
 const hbs = require("express-handlebars");
 const path = require("path");
-const getPlaceholder = require("./lib/getplaceholder");
+const getWeather = require("./lib/getWeather");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, "public")));
 app.engine(
   "hbs",
   hbs({
@@ -14,19 +19,41 @@ app.engine(
 );
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", ".hbs");
-app.use(express.static(path.join(__dirname, "public")));
-
 app.get("/", async (req, res) => {
-  let data = await getPlaceholder();
-  console.log(data);
-  res.render("index", { data, listExists: true });
+  let data = await getWeather();
+  let description = data.weather[0].description;
+  let temp = data.main.temp;
+  let feels_like = data.main.feels_like;
+  console.log(temp);
+  res.render("index", { data: { description, temp, feels_like } });
 });
-app.get("/about", (req, res) => {
-  res.render("about");
+app.get("/weather", (req, res) => {
+  res.render("weather");
+});
+app.post("/weather", async (req, res) => {
+  let city = req.body.body.city;
+  let code = req.body.code;
+  let data = await getWeather(location, code);
+  if (data.cod == "404") {
+    res.render("weather", {
+      err: "the provided location doesnt exist",
+    });
+    return;
+  }
+  let name = data.name;
+  let description = data.weather[0].description;
+  let temp = data.main.temp;
+  let feels_like = data.main.feels_like;
+  res.render("weather", {
+    name,
+    data: { description, temp, feels_like },
+    likeExists: true,
+  });
+  res.render("weather");
 });
 app.get("*", (req, res) => {
   res.render("404");
 });
 app.listen(3000, () => {
-  console.log("Listening to port 3000");
+  console.log("listening on port 3000");
 });
